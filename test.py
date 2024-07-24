@@ -1,17 +1,41 @@
 import pytest
-from main import init_db, add_user, get_user
+from main import count_vowels
 
+def test_count_vowels_only_vowels():
+    assert count_vowels("aeiou") == 5
+    assert count_vowels("АЕЁИОУЫЭЮЯ") == 10
 
-@pytest.fixture
-def db_conn():
-   conn = init_db()
-   yield conn
-   conn.close()
+def test_count_vowels_no_vowels():
+    assert count_vowels("bcdfg") == 0
+    assert count_vowels("БВГДЖЗКЛМНПРСТФХЦЧШЩ") == 0
 
-def test_add_or_get_user(db_conn):
-   add_user(db_conn, "Sasha", 30)
-   user = get_user(db_conn, "Sasha")
-   assert user == (1, "Sasha", 30)
+def test_count_vowels_mixed_string():
+    assert count_vowels("Hello, World!") == 3
+    assert count_vowels("Привет, мир!") == 3
+
+@pytest.mark.parametrize("string, expected", [
+    ("Python Programming", 4),
+    ("АаЕеЁёИиОоУуЫыЭэЮюЯя", 20),
+    ("", 0),
+    ("BCDFGbcdfg", 0),
+    ("aEiOu", 5),
+    ("Как дела?", 3)
+])
+def test_count_vowels_parametrized(string, expected):
+    assert count_vowels(string) == expected
+
+# from main import init_db, add_user, get_user
+#
+# @pytest.fixture
+# def db_conn():
+#    conn = init_db()
+#    yield conn
+#    conn.close()
+#
+# def test_add_or_get_user(db_conn):
+#    add_user(db_conn, "Sasha", 30)
+#    user = get_user(db_conn, "Sasha")
+#    assert user == (1, "Sasha", 30)
 
 # from main import sort_list  # замените my_module на имя вашего модуля
 #
